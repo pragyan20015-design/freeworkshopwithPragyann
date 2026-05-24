@@ -50,3 +50,4 @@ npm run client       # frontend on port 3000
 - Submit class inquiries
 - Admin panel: login, add/delete custom workshops, view inquiries
 "# pragyann" 
+"# freeworkshopwithPragyann" 
