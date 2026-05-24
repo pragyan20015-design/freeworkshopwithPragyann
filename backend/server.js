@@ -12,10 +12,44 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true
-}));
+const defaultAllowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://pragyann-git-main-bishaldsrija08s-projects.vercel.app'
+];
+
+const envAllowedOrigins = [
+  process.env.CLIENT_URL,
+  ...(process.env.CORS_ORIGINS || '').split(',')
+]
+  .map((origin) => (origin || '').trim())
+  .filter(Boolean);
+
+const allowedOrigins = new Set([
+  ...defaultAllowedOrigins,
+  ...envAllowedOrigins
+]);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow non-browser tools and same-origin requests without an Origin header.
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+
+      // Allow Vercel preview deployments if needed.
+      if (/^https:\/\/pragyann-.*\.vercel\.app$/.test(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true
+  })
+);
 app.use(express.json());
 
 // Routes
