@@ -1,4 +1,13 @@
-const API_BASE = '/api';
+const normalizedEnvBase = (process.env.REACT_APP_API_BASE_URL || '')
+  .trim()
+  .replace(/\/+$/, '');
+
+const defaultProdBase = 'https://pragyann-1.onrender.com';
+const runtimeBase =
+  normalizedEnvBase ||
+  (process.env.NODE_ENV === 'production' ? defaultProdBase : '');
+
+const API_BASE = runtimeBase ? `${runtimeBase}/api` : '/api';
 
 const getHeaders = (includeAuth = false) => {
   const headers = { 'Content-Type': 'application/json' };
