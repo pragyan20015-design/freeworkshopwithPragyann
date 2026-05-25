@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
 const workshopRoutes = require('./routes/workshops');
 const personalRoutes = require('./routes/personal');
@@ -60,10 +61,29 @@ app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    database:
+      mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString()
+  });
 });
 
-// Connect to MongoDB then start server
+if (process.env.NODE_ENV === 'production') {
+  const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'build');
+  app.use(express.static(frontendBuildPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendBuildPath, 'index.html'));
+  });
+}
+
+// Start the web server first so deployment platforms can detect the open port.
+app.listen(PORT, () => {
+  console.log(`Pragyan server running on port ${PORT}`);
+});
+
+// Connect to MongoDB after the server is listening.
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/pragyan';
 
 mongoose
@@ -71,11 +91,7 @@ mongoose
   .then(async () => {
     console.log('Connected to MongoDB');
     await seedDatabase();
-    app.listen(PORT, () => {
-      console.log(`Pragyan server running on http://localhost:${PORT}`);
-    });
   })
   .catch((err) => {
     console.error('MongoDB connection failed:', err.message);
-    process.exit(1);
   });

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Pragyan Workshop and Personal Class Management Website",
   "scripts": {
+    "start": "cd backend && npm start",
+    "build": "cd frontend && npm install && npm run build",
+    "postinstall": "cd backend && npm install && cd ../frontend && npm install",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd backend && npm run dev",
     "client": "cd frontend && npm start",
