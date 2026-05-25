@@ -16,8 +16,8 @@ const PORT = process.env.PORT || 5000;
 const defaultAllowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-  'https://pragyann.vercel.app',
-  'https://pragyann-git-main-bishaldsrija08s-projects.vercel.app'
+  'https://genalphacodes.vercel.app',
+  'https://freeworkshopwith-pragyann-e9wpxqxcf.vercel.app'
 ];
 
 const envAllowedOrigins = [
@@ -95,3 +95,5 @@ mongoose
   .catch((err) => {
     console.error('MongoDB connection failed:', err.message);
   });
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Running on ${PORT}`));
