@@ -2,7 +2,7 @@ const normalizedEnvBase = (process.env.REACT_APP_API_BASE_URL || '')
   .trim()
   .replace(/\/+$/, '');
 
-const defaultProdBase = 'https://pragyann-1.onrender.com';
+const defaultProdBase = 'https://freeworkshopwithpragyann-3.onrender.com';
 const runtimeBase =
   normalizedEnvBase ||
   (process.env.NODE_ENV === 'production' ? defaultProdBase : '');
